@@ -1,10 +1,15 @@
-import { banner, detailHot } from '@/services/api'
+import { banner, detailHot, searchList } from '@/services/api'
 
 export default {
     namespace: 'found',
     state: {
         listBanner: [],
-        hotSong: []
+        hotSong: [],
+        searchList: [],
+        searchAlbum: [],
+        playList: [],
+        radioList: [],
+        mvList: []
     },
     reducers: {
         setStateVal(state, { payload, callback }) {
@@ -22,7 +27,7 @@ export default {
                 yield put({
                     type: 'setStateVal',
                     payload: {
-                        hotSong: res.data.data
+                        hotSong: res?.data?.data || []
                     }
                 })
             }
@@ -34,11 +39,63 @@ export default {
                 yield put({
                     type: 'setStateVal',
                     payload: {
-                        listBanner: res.data.banners
+                        listBanner: res?.data?.banners || []
                     }
                 })
             }
         },
-    },
+        *getSearchList({ payload }, { put, call }) {
+            const res = yield call(searchList, payload)
+            if (res) {
+                yield put({
+                    type: 'setStateVal',
+                    payload: {
+                        searchList: res?.data?.result?.songs || []
+                    }
+                })
+            }
+        },
+        *getSearchAlbum({ payload }, { put, call }) {
+            const res = yield call(searchList, payload)
+            if (res) {
+                yield put({
+                    type: 'setStateVal',
+                    payload: {
+                        searchAlbum: res?.data?.result?.albums || []
+                    }
+                })
+            }
+        },
+        *getPlayList({ payload }, { put, call }) {
+            const res = yield call(searchList, payload)
+            if (res) {
+                yield put({
+                    type: 'setStateVal',
+                    payload: {
+                        playList: res?.data?.result?.playlists || [],
 
-};
+                    }
+                })
+            }
+        },
+        *getRadioList({ payload }, { put, call }) {
+            const res = yield call(searchList, payload)
+            console.log(res.data.result.djRaputdios, 'lddd')
+            yield put({
+                type: 'setStateVal',
+                payload: {
+                    radioList: res?.data?.result?.djRadios || []
+                }
+            })
+        },
+        *getMvList({ payload }, { put, call }) {
+            const res = yield call(searchList, payload)
+            yield put({
+                type: 'setStateVal',
+                payload: {
+                    mvList: res?.data?.result?.mvs || []
+                }
+            })
+        },
+    }
+}

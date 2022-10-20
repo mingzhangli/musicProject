@@ -15,11 +15,13 @@ export default connect(({ found }) => ({
     const [searchRecommend, setSearchRecommend] = useState<[]>(['爱美很', '苦茶', '演员', '光辉岁月'])
     const { searchDetail } = props
 
+
     useEffect(() => {
         dispatch({
             type: 'found/getHotSong'
         })
     }, [])
+
 
     const delHis = () => {
         if (searchHistory.length > 0) {
@@ -28,6 +30,15 @@ export default connect(({ found }) => ({
             setSearchHistory([...temp])
 
         }
+    }
+
+    const searchContent = (val: unknown, num = 20) => {
+        history.push({
+            pathname: '/songList',
+            query: {
+                keywords: val?.target?.value,
+            }
+        })
     }
 
     const back = () => {
@@ -46,6 +57,7 @@ export default connect(({ found }) => ({
                 <SearchBar
                     ref={searchRef}
                     placeholder='请输入内容'
+                    onBlur={searchContent}
                 />
             </NavBar>
             <div className="history">
@@ -79,7 +91,7 @@ export default connect(({ found }) => ({
                     <div className="singerTitle">歌手榜</div>
                     {
                         searchDetail.map((item, index) => {
-                            return <li className='hot'>
+                            return <li className='hot' key={index}>
                                 <span className='searchTopic'> {item.searchWord}</span>
                                 <img src={item.iconUrl} />
                             </li>

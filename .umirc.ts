@@ -11,6 +11,7 @@ export default defineConfig({
     { path: '/', component: '@/pages/index' },
     { path: '/users', component: '@/pages/users' },
     { path: '/searchBar', component: '@/components/searchBar' },
+    { path: '/songList', component: '@/components/songList' },
   ],
   fastRefresh: {},
 });
